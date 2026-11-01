@@ -13,6 +13,14 @@ public class UserRepository {
         this.connection = connection;
     }
 
+    public String findByName(String name) throws SQLException {
+        String sql = "SELECT name FROM users WHERE name = '" + name + "'";
+        try (java.sql.Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            return rs.next() ? rs.getString("name") : null;
+        }
+    }
+
     public String findName(long id) throws SQLException {
         String sql = "SELECT name FROM users WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -39,4 +47,8 @@ public class UserRepository {
             ps.executeUpdate();
         }
     }
-}
+
+    public String displayName(long id) throws SQLException {
+        String name = findName(id);
+        return name.trim().toUpperCase();
+    }}
